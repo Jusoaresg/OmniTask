@@ -6,19 +6,24 @@ public class UserRepository : Repository<User>, IUserRepository
         _context = dbContext;
     }
 
-    public override void Add(User entity)
+    public async Task<User> GetByEmail(string email)
     {
-        User user = new User
+        var user = await _dbSet.FindAsync(email);
+        if (user is null)
         {
-            Id = Guid.NewGuid(),
-            Name = entity.Name,
-            Adress = entity.Adress,
-            BornDate = entity.BornDate,
-            Phone = entity.Phone
-
-        };
-
-        base.Add(user);
+            throw new KeyNotFoundException("Usuario não encontrado");
+        }
+        return user;
     }
 
+    public Task RemoveByEmail(string email)
+    {
+        var user = _dbSet.FirstOrDefault(e => e.Email == email);
+        if (user is null)
+        {
+            throw new KeyNotFoundException("Usuario não encontrado");
+        }
+        _dbSet.Remove(user);
+        return Task.CompletedTask;
+    }
 }

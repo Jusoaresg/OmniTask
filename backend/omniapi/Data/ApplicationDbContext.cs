@@ -7,6 +7,6 @@ public class ApplicationDbContext : DbContext
     {
     }
 
-    public DbSet<User> Users;
-    public DbSet<Invoice> Invoices;
+    public DbSet<User> User { get; set; }
+    public DbSet<Invoice> Invoice { get; set; }
 }

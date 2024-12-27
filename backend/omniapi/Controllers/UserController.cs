@@ -8,39 +8,59 @@ public class UserController : ControllerBase
     private readonly ILogger<UserController> _logger;
     private readonly ApplicationDbContext _context;
 
-    private readonly IUserRepository _userRepository;
+    private readonly IUserService _userService;
 
-    public UserController(ApplicationDbContext dbContext, ILogger<UserController> logger, IUserRepository userRepository)
+    public UserController(ApplicationDbContext dbContext, ILogger<UserController> logger, IUserService userService)
     {
         _logger = logger;
         _context = dbContext;
-        _userRepository = userRepository;
+        _userService = userService;
 
     }
 
-    [HttpGet("{userId}")]
+    [HttpGet("id/{userId}")]
     public async Task<IActionResult> GetUser(Guid userId)
     {
-        return Ok();
+        var user = await _userService.GetAsync(userId);
+        return Ok(user);
+    }
+
+
+    [HttpGet("email/{email}")]
+    public async Task<IActionResult> GetUserByEmail(string email)
+    {
+        var user = await _userService.GetByEmail(email);
+        return Ok(user);
     }
 
 
     [HttpGet]
     public async Task<IActionResult> ListUsers()
     {
-        return Ok();
+
+        var users = await _userService.GetAllAsync();
+        return Ok(users);
     }
 
 
     [HttpPost]
     public async Task<IActionResult> CreateUser(UserDto user)
     {
-        return Ok();
+        User _user = await _userService.AddAsync(user);
+        return Ok(_user);
     }
 
-    [HttpDelete("{userId}")]
-    public async Task<IActionResult> DeleteUser(Guid userId)
+    [HttpDelete("id/{userId}")]
+    public async Task<IActionResult> RemoveUserById(Guid userId)
     {
-        return Ok();
+        await _userService.RemoveAsync(userId);
+        return Ok("Usuario deletado com sucesso");
+    }
+
+    [HttpDelete("email/{email}")]
+    public async Task<IActionResult> RemoveUserByEmail(string email)
+    {
+        await _userService.RemoveByEmail(email);
+        return Ok("Usuario deletado com sucesso");
     }
 }

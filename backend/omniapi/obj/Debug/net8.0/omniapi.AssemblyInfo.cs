@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("omniapi")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b36f1664afeb9c5e12cf67df1bc20660155d6853")]
 [assembly: System.Reflection.AssemblyProductAttribute("omniapi")]
 [assembly: System.Reflection.AssemblyTitleAttribute("omniapi")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

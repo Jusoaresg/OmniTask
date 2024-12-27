@@ -3,13 +3,15 @@ using Microsoft.EntityFrameworkCore;
 public class Repository<T> : IRepository<T> where T : class
 {
     readonly ApplicationDbContext _context;
+    internal DbSet<T> _dbSet;
 
     public Repository(ApplicationDbContext context)
     {
         _context = context;
+        _dbSet = _context.Set<T>();
     }
 
-    public virtual void Add(T entity)
+    public virtual async Task<T> AddAsync(T entity)
     {
         if (entity is null)
         {
@@ -18,7 +20,8 @@ public class Repository<T> : IRepository<T> where T : class
 
         try
         {
-            _context.Add(entity);
+            await _dbSet.AddAsync(entity);
+            return entity;
         }
         catch (DbUpdateException e)
         {
@@ -30,11 +33,11 @@ public class Repository<T> : IRepository<T> where T : class
         }
     }
 
-    public async Task<T> Get(Guid id)
+    public async Task<T> GetAsync(Guid id)
     {
         try
         {
-            var entity = await _context.FindAsync<T>(id);
+            var entity = await _dbSet.FindAsync(id);
             if (entity is null)
             {
                 throw new ArgumentNullException(nameof(entity), "A entidade não pode ser nula.");
@@ -51,14 +54,26 @@ public class Repository<T> : IRepository<T> where T : class
         }
     }
 
-    public async Task<IEnumerable<T>> GetAll()
+    public async Task<IEnumerable<T>> GetAllAsync()
     {
-        IEnumerable<T> users = await _context.Set<T>().ToListAsync();
-        return users;
-        throw new NotImplementedException();
+        IEnumerable<T> entities = await _dbSet.ToListAsync();
+        return entities;
     }
-    public void Remove(Guid id)
+
+    public async Task RemoveAsync(Guid id)
     {
-        throw new NotImplementedException();
+        var user = await _dbSet.FindAsync(id);
+        if (user is null)
+        {
+            throw new KeyNotFoundException("Usuario não encontrado");
+        }
+        _dbSet.Remove(user);
+
+        return;
+    }
+
+    public async Task SaveChangesAsync()
+    {
+        await _context.SaveChangesAsync();
     }
 }

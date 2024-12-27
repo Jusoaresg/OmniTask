@@ -1,8 +1,17 @@
+using System.ComponentModel.DataAnnotations;
+
 public class User
 {
-    public required Guid Id { get; set; }
-    public required string Name { get; set; }
-    public required string Phone { get; set; }
-    public required string Adress { get; set; }
-    public required string BornDate { get; set; }
+    [Key]
+    public Guid Id { get; set; }
+    [Required]
+    public string Name { get; set; }
+    [Required]
+    public string Email { get; set; }
+    [Required]
+    public string Phone { get; set; }
+    [Required]
+    public string Address { get; set; }
+    [Required]
+    public string BornDate { get; set; }
 }

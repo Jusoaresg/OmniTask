@@ -1,4 +1,5 @@
 public interface IUserRepository : IRepository<User>
 {
-    public void Add(User entity);
+    public Task<User> GetByEmail(string email);
+    public Task RemoveByEmail(string email);
 }
